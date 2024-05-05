@@ -14,7 +14,7 @@ import MaskInput from 'react-native-mask-input';
 const Page = () => {
 
     const [loading, setLoading] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('123');
     const router = useRouter();
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
     const { bottom } = useSafeAreaInsets();
@@ -27,7 +27,8 @@ const Page = () => {
         setLoading(true);
         setTimeout(() => {
             router.push(`/verify/${phoneNumber}`);
-        }, 2000);
+            setLoading(false)
+        }, 200);
         
     };
 

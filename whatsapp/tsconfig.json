@@ -5,7 +5,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "react-native-reanimated": ["./node_modules/react-native-reanimated"]
     }
   },
   "include": [
