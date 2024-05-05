@@ -3,21 +3,25 @@
 import { useState } from 'react'
 import { useRouter } from 'expo-router';
 
-import { View, Text, KeyboardAvoidingView, Platform, Linking, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, Linking, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import MaskInput from 'react-native-mask-input';
+import { isClerkAPIResponseError, useSignIn, useSignUp } from '@clerk/clerk-expo';
 
 
 const Page = () => {
 
     const [loading, setLoading] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('123');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const router = useRouter();
     const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
     const { bottom } = useSafeAreaInsets();
+
+    const {signUp, setActive} = useSignUp();
+    const {signIn} = useSignIn();
 
     const openLink = () => {
     Linking.openURL('https://www.whatsapp.com/legal/#privacy-policy')
@@ -25,18 +29,51 @@ const Page = () => {
 
     const sendOTP = async () => {
         setLoading(true);
-        setTimeout(() => {
+        try{
+            await signUp!.create({phoneNumber});
+
+            signUp!.preparePhoneNumberVerification();
+
             router.push(`/verify/${phoneNumber}`);
-            setLoading(false)
-        }, 200);
+            setLoading(false);
+
+        } catch (err) {
+            console.error(err);
+            if(isClerkAPIResponseError(err)){
+                if(err.errors[0].code === 'form_identifier_exists'){
+                    console.log('user exists');
+                    await trySignIn();
+                }else {
+                    setLoading(false);
+                    console.log(err);
+                }
+            }
+        }
         
     };
 
     const trySignIn = async () => {
+        const { supportedFirstFactors } = await signIn!.create({
+            identifier: phoneNumber,
+        })
+
+        const firstPhoneFactor: any = supportedFirstFactors.find((factor: any) => {
+            return factor.strategy === 'phone_code'
+        });
+
+        const { phoneNumberId } = firstPhoneFactor;
+
+        await signIn!.prepareFirstFactor({
+            strategy: 'phone_code',
+            phoneNumberId,
+        });
+
+        router.push(`/verify/${phoneNumber}?signin=true`);
+        setLoading(false);
     };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}}>
+    <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={keyboardVerticalOffset} style={{flex: 1}}>
         <View style={styles.container}>
             {loading && (
                 <View style={[StyleSheet.absoluteFill, styles.loading]}>
@@ -62,7 +99,7 @@ const Page = () => {
                     placeholder='+91 Your phone number'
                     value={phoneNumber}
                     onChangeText={(masked, unmasked) => {
-                        setPhoneNumber(masked); // you can use the unmasked value as well
+                        setPhoneNumber(unmasked); // you can use the unmasked value as well
 
                     
                 }}

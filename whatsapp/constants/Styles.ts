@@ -7,6 +7,7 @@ export const defaultStyles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 14,
     marginTop: 20,
+    marginBottom: 10,
   },
   item: {
     flexDirection: 'row',
