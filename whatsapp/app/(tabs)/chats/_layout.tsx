@@ -3,7 +3,7 @@ import { Link, Stack } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Ionicons } from '@expo/vector-icons'
-import { View } from 'react-native'
+import { View, Image, Text } from 'react-native'
 
 const Layout = () => {
   return (
@@ -44,6 +44,41 @@ const Layout = () => {
           },
         }}
       />
+      <Stack.Screen 
+      name='[id]'
+      options={{
+        title: '',
+        headerBackTitleVisible: false,
+        headerTitleAlign: 'center',
+        headerRight: () => (
+          <View style={{ flexDirection: 'row', gap: 20 }}>
+            <TouchableOpacity>
+              <Ionicons name="videocam-outline" color={Colors.primary} size={25} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="call-outline" color={Colors.primary} size={25} />
+            </TouchableOpacity>
+          </View>
+        ),
+        headerTitle: () => (
+          <View style={{ flexDirection: 'row',
+            gap: 10,
+            paddingBottom: 4, 
+            alignItems: 'center', 
+            width: 220}}>
+            <Image 
+              source={{uri : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJlaeLbiuCpNj2yzXpvLwtw0_WEg7zhrOhs7HGVshTyg&s'}}
+              style={{ width: 40, height: 40, borderRadius: 50}}
+            />
+            <Text style={{ fontSize: 14, fontWeight: '500'}}>
+              Godzilla
+            </Text>
+          </View>
+        ),
+        headerStyle: {
+          backgroundColor: Colors.background,
+        }
+      }} />
    </Stack>
   )
 }

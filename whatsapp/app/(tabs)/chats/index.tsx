@@ -4,13 +4,13 @@ import React from 'react'
 import chats from '@/assets/data/chats.json'
 import { defaultStyles } from '@/constants/Styles'
 import ChatRow from '@/components/ChatRow'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Page = () => {
   return (
-    <ScrollView
-      contentContainerStyle={{ paddingTop: 90, backgroundColor: '#fff'}}
-      contentInsetAdjustmentBehavior='automatic'
-    > 
+    
+    <SafeAreaView style={{ paddingTop: 50, backgroundColor: '#fff'}}
+    >
       <FlatList 
       data={chats}
       keyExtractor={(item) => item.id}
@@ -19,7 +19,7 @@ const Page = () => {
       <ChatRow {...item}/>
       }
       />
-    </ScrollView>
+    </SafeAreaView>
   )
 }
 
