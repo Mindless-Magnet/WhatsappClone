@@ -1,15 +1,17 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Stack, useSegments } from 'expo-router';
+import { Link, Stack, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
 import { ClerkProvider, SignedIn, useAuth } from '@clerk/clerk-expo';
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
+import Colors from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 // Cache the Clerk JWT
 const tokenCache = {
@@ -71,7 +73,7 @@ const InitialLayout = () => {
     const isTabsGroup = segments[0] === '(tabs)';
 
     if(isSignedIn && !isTabsGroup) {
-      router.replace('/(tabs)/calls');
+      router.replace('/(tabs)/chats');
     } else if(!SignedIn){
       router.replace('/');
     }
@@ -88,6 +90,30 @@ const InitialLayout = () => {
         <Stack.Screen name="otp" options={{ headerTitle: 'Enter Your Phone Number', headerTitleAlign: 'center' }} />
         <Stack.Screen name="verify/[phone]" options={{ headerTitleAlign: 'center', headerBackTitle: 'Edit' }} />
         <Stack.Screen name='(tabs)' options={{headerShown: false}}/>
+        <Stack.Screen name='(modals)/new-chat' options={{
+          presentation: 'modal',
+          title: 'New Chat',
+          headerTitleAlign: 'center',
+          headerTransparent: true,
+          headerBlurEffect: 'regular',
+          headerStyle: {
+            backgroundColor: Colors.background,
+          },
+          headerSearchBarOptions: {
+            placeholder: 'Search name or number',
+            hideWhenScrolling: false,
+            
+          },
+          headerRight: () => (
+            <Link href='/(tabs)/chats' asChild>
+              <TouchableOpacity 
+              style={{ backgroundColor: Colors.lightGray, borderRadius: 20, padding: 5}}>
+                <Ionicons name='close' color={Colors.gray} size={20}/>
+              </TouchableOpacity>
+            </Link>
+          )
+          
+          }} />
       </Stack>)
 }
 
