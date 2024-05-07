@@ -7,11 +7,17 @@ import { useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native'
 
 import { ClerkProvider, SignedIn, useAuth } from '@clerk/clerk-expo';
-const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
+
+import Constants from 'expo-constants';
+
+
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+
 
 // Cache the Clerk JWT
 const tokenCache = {

@@ -3,7 +3,8 @@ import React from 'react'
 import contacts from '@/assets/data/contacts.json'
 import { AlphabetList } from 'react-native-section-alphabet-list';
 import Colors from '@/constants/Colors';
-import { defaultStyles } from '@/constants/Styles';
+import { defaultStyles } from '@/constants/Styles'
+
 
 
 const Page = () => {
